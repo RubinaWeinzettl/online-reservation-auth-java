@@ -46,9 +46,6 @@ jobs:
   docker:
     needs: build
     runs-on: arc-runner-set
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout Code
@@ -57,20 +54,12 @@ jobs:
       - name: Download WAR Artifact
         uses: actions/download-artifact@v4
         with:
-          name: dipag-war
-          path: target/
+          name: or-auth-war
+          path: auth-service/target/
 
-      - name: Log in to Registry
-        uses: docker/login-action@v6
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker Image
+        run: docker build -t auth-service:latest .
 
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          # Das Dockerfile sollte das WAR-File in /usr/local/tomcat/webapps/ kopieren
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yaml
