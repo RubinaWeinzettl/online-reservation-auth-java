@@ -27,7 +27,11 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        uses: s4u/maven-action@v1.11.0
+        with:
+          java-version: '24'
+          maven-version: '3.9.9'
+          args: clean package -DskipTests
 
       #- name: Run Unit Tests
       #  run: mvn test
