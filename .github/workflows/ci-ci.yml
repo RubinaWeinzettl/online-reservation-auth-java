@@ -1,0 +1,72 @@
+name: Online Reservierung Auth Java CI/CD
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  WAR_PATH: target/or-auth.war
+
+jobs:
+  # --- STAGE 1: BUILD & TEST ---
+  build:
+    runs-on: arc-runner-set
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 24
+        uses: actions/setup-java@v3
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      #- name: Run Unit Tests
+      #  run: mvn test
+
+      - name: Upload Artifact (WAR)
+        uses: actions/upload-artifact@v3
+        with:
+          name: or-auth-war
+          path: ${{ env.WAR_PATH }}
+
+  # --- STAGE 2: DOCKER BUILD & PUSH ---
+  docker:
+    needs: build
+    runs-on: arc-runner-set
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download WAR Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dipag-war
+          path: target/
+
+      - name: Log in to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          # Das Dockerfile sollte das WAR-File in /usr/local/tomcat/webapps/ kopieren
