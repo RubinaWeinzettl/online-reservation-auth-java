@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  WAR_PATH: target/or-auth.war
+  WAR_PATH: auth-service/target/auth-service.war
 
 jobs:
   # --- STAGE 1: BUILD & TEST ---
@@ -26,18 +26,18 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build with Maven
+      - name: Setup Maven
         uses: s4u/setup-maven-action@v1.20.0
         with:
-          java-version: '24'
           maven-version: '3.9.9'
-          args: clean package -DskipTests
 
-      #- name: Run Unit Tests
-      #  run: mvn test
+      - name: Build with Maven
+        run: mvn -f auth-service/pom.xml clean package -DskipTests
+            #- name: Run Unit Tests
+            #  run: mvn test
 
       - name: Upload Artifact (WAR)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: or-auth-war
           path: ${{ env.WAR_PATH }}
