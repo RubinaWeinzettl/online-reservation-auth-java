@@ -43,23 +43,23 @@ jobs:
           path: ${{ env.WAR_PATH }}
 
   # --- STAGE 2: DOCKER BUILD & PUSH ---
-  docker:
-    needs: build
-    runs-on: arc-runner-set
+  #docker:
+  #  needs: build
+  # runs-on: arc-runner-set
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+  #  steps:
+  #    - name: Checkout Code
+  #      uses: actions/checkout@v4
 
-      - name: Download WAR Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: or-auth-war
-          path: auth-service/target/
+  #    - name: Download WAR Artifact
+  #      uses: actions/download-artifact@v4
+  #      with:
+  #        name: or-auth-war
+  #        path: auth-service/target/
 
-      - name: Build Docker Image
-        run: docker build -t auth-service:latest .
+  #    - name: Build Docker Image
+  #      run: docker build -t auth-service:latest .
 
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/deployment.yaml
+  #    - name: Deploy to Kubernetes
+  #      run: |
+  #        kubectl apply -f k8s/deployment.yaml
