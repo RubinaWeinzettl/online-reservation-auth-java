@@ -15,7 +15,7 @@ Implemented:
 - user registration
 - user login
 - BCrypt password hashing
-- MariaDB persistence
+- MySQL persistence
 - Docker Compose local development setup
 
 ---
@@ -40,7 +40,7 @@ It is responsible for:
 - Jakarta EE (Servlet API)
 - Apache Tomcat 10
 - Maven
-- MariaDB
+- MySQL
 - JDBC
 - BCrypt
 - Docker
