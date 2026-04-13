@@ -1,163 +1,173 @@
 # Auth Service (Java)
 
-This service is part of the **Online Reservation** project and is responsible for **authentication and authorization**.
+This service is part of the **Online Reservation** project and is responsible for **authentication and user access management**.
 
-It is implemented using a **Java / Jakarta EE stack** and designed as a standalone service within a service-oriented architecture.
+It is implemented as a standalone Java service using **Jakarta EE / Servlets**, **Tomcat**, and **MariaDB**.
+
+---
+
+## Current Status
+
+✅ **v0.1-auth-service** released as pre-release
+
+Implemented:
+
+- user registration
+- user login
+- BCrypt password hashing
+- MariaDB persistence
+- Docker Compose local development setup
 
 ---
 
 ## Purpose
 
-The Auth Service handles:
+The Auth Service provides the authentication foundation for the platform.
 
-- user authentication (login)
-- password verification (hashed passwords)
-- issuing **JWT tokens**
-- role-based access control (**RBAC**)
-- providing a foundation for secure communication between services
+It is responsible for:
+
+- creating user accounts
+- verifying credentials
+- secure password storage
+- future token-based authentication
+- future authorization concepts (roles / permissions)
 
 ---
 
 ## Tech Stack
 
-- Java 21
-- Jakarta EE (JAX-RS, CDI)
-- JPA / Hibernate
+- Java 17
+- Jakarta EE (Servlet API)
+- Apache Tomcat 10
 - Maven
-- WildFly
-- PostgreSQL
+- MariaDB
+- JDBC
+- BCrypt
 - Docker
+- Docker Compose
+- phpMyAdmin (local development)
 
 ---
 
-## Architecture (high-level)
+## Architecture
 
-- exposes a **REST API** for authentication
-- separates concerns into:
-  - API layer (JAX-RS endpoints)
-  - service layer (business logic)
-  - persistence layer (JPA entities & repositories)
-- uses **JWT** for stateless authentication
-- integrates with a relational database for user management
+Current structure:
 
----
+- **Servlet layer** → HTTP endpoints
+- **Service layer** → business logic
+- **Repository layer** → database access
+- **DTO layer** → request / response models
+- **Model layer** → domain objects
 
-## Features (MVP)
-
-- login with username and password
-- password hashing (e.g. BCrypt)
-- JWT token generation
-- basic role model (e.g. `USER`, `ADMIN`)
-- protected endpoints (token required)
+This service is built incrementally with focus on clean separation of concerns.
 
 ---
 
-## Planned Extensions
+## Implemented Endpoints
 
-- refresh tokens
-- OAuth / OIDC integration
-- user registration
-- password reset
-- fine-grained role & permission system
+### Register
 
----
+POST /auth-service/register
 
-## Project Structure (planned)
-
-```text
-auth-service-java/
-│
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── ... (packages)
-│   │   │       ├── api/        # REST endpoints
-│   │   │       ├── service/    # business logic
-│   │   │       ├── model/      # entities
-│   │   │       ├── repository/ # data access
-│   │   │       └── security/   # JWT, auth logic
-│   │   │
-│   │   └── resources/
-│   │       └── META-INF/
-│   │           └── persistence.xml
-│
-├── pom.xml
-└── Dockerfile
-```
-
-## Getting Started (planned)
-
-### Prerequisites
-
-- Java 21
-- Maven
-- Docker
-- PostgreSQL
-
----
-
-### Run locally (planned)
-
-1. Build the project:
-    mvn clean package
-
-2. Start with Docker (later via docker compose)
-
-3. Deploy to WildFly
-
----
-
-## API (example)
+Creates a new user account.
 
 ### Login
 
-POST /auth/login
+POST /auth-service/auth/login
 
-Request:
-{
-  "username": "user",
-  "password": "password"
-}
-
-Response:
-{
-  "access_token": "jwt-token",
-  "token_type": "Bearer"
-}
+Validates user credentials.
 
 ---
 
-## Development Notes
+## Example Requests
 
-- The project is built incrementally
-- focus is on:
-  - clean architecture
-  - clear separation of concerns
-  - realistic DevOps setup
-- not all features are implemented yet
+### Register
+
+curl -i -X POST http://localhost:8081/auth-service/register \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "test@example.com",
+  "password": "test123"
+}'
+
+### Login
+
+curl -i -X POST http://localhost:8081/auth-service/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "test@example.com",
+  "password": "test123"
+}'
 
 ---
 
-## CI/CD (planned)
+## Planned Features
 
-- Jenkins pipeline with:
-  - mvn test
-  - mvn package
-  - Docker image build
-- later integration into Kubernetes deployment
+### Authentication
+
+- JWT token generation after login
+- token validation
+- refresh tokens
+- logout concept
+
+### Authorization
+
+- roles / permissions
+- RBAC extension
+
+### Account Security
+
+- password reset
+- email verification
+- stronger request validation
+- rate limiting
+
+### Quality
+
+- unit tests
+- integration tests
+
+### Future Expansion
+
+- OAuth / OpenID Connect integration
+
+---
+
+## Local Development
+
+docker compose up -d --build
+
+docker compose down
 
 ---
 
 ## Related Repositories
 
-- Overview:  
-  https://github.com/RubinaWeinzettl/online-reservation-overview
+### Overview
 
-- Web Frontend:  
-  https://github.com/RubinaWeinzettl/online-reservation-web
+https://github.com/RubinaWeinzettl/online-reservation-overview
+
+### Web Frontend
+
+https://github.com/RubinaWeinzettl/online-reservation-web
+
+---
+
+## Development Philosophy
+
+This project is intentionally built step by step.
+
+Focus areas:
+
+- learning realistic backend architecture
+- clean code structure
+- containerized development
+- incremental delivery
+- practical DevOps workflows
 
 ---
 
 ## Status
 
-🚧 Work in progress – currently being rebuilt with Java / Jakarta EE
+🚧 Active development  
+Current milestone: **Authentication MVP completed**
