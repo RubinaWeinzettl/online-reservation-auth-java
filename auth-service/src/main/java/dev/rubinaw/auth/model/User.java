@@ -1,30 +1,84 @@
 package dev.rubinaw.auth.model;
 
+/**
+ * Represents a user record required for authentication.
+ */
 public class User {
 
-    private String username;
-    private String password;
+    private String userId;
+    private String email;
+    private String passwordHash;
 
-    public User() {}
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+    /**
+     * Creates an empty user instance.
+     */
+    public User() {
     }
 
-    public String getUsername() {
-        return username;
+    /**
+     * Creates a user instance with the fields needed for login.
+     *
+     * @param userId the user identifier
+     * @param email the user email address
+     * @param passwordHash the stored password hash
+     */
+    public User(String userId, String email, String passwordHash) {
+        this.userId = userId;
+        this.email = email;
+        this.passwordHash = passwordHash;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    /**
+     * Returns the user identifier.
+     *
+     * @return the user identifier
+     */
+    public String getUserId() {
+        return userId;
     }
 
-    public String getPassword() {
-        return password;
+    /**
+     * Sets the user identifier.
+     *
+     * @param userId the user identifier
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    /**
+     * Returns the user email address.
+     *
+     * @return the user email address
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the user email address.
+     *
+     * @param email the user email address
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Returns the stored password hash.
+     *
+     * @return the stored password hash
+     */
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    /**
+     * Sets the stored password hash.
+     *
+     * @param passwordHash the stored password hash
+     */
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
